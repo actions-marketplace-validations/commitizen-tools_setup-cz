@@ -22,6 +22,8 @@ jobs:
       - uses: pndurette/gh-actions-auto-docs@v1
         with:
           git_push: false
+          action_yaml_file: ./action.yaml
+          heading_size: 2
       - id: bump-version
         run: |
           cz bump --yes
