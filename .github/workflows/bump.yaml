@@ -27,7 +27,7 @@ jobs:
       - id: bump-version
         run: |
           cz bump --yes
-          current_version="v$(cz version -p --current)"
+          current_version="v$(cz version -p)"
           major_version="v$(cz version -p --major)"
           echo "current_version=$current_version" >> $GITHUB_OUTPUT
           echo "major_version=$major_version" >> $GITHUB_OUTPUT
