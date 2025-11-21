@@ -57,3 +57,25 @@ jobs:
             const allItems = czList.stdout.trim().split('\n');
             const result = allItems.includes(extraRequirements);
             assert.ok(result, `Expected ${extraRequirements} to be included in the list of installed cz plugins, but it was not.`);
+  test-get-changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: ./
+      - name: Build changelog
+        env:
+          GIVEN_VERSION: "v0.1.0"
+        run: |
+          cz changelog --dry-run "${GIVEN_VERSION}" > .changelog.md
+      - name: Verify changelog content
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const assert = require('node:assert/strict');
+            const fs = require('node:fs');
+            const changelogContent = fs.readFileSync('.changelog.md', 'utf8');
+            assert.ok(changelogContent.includes('v0.1.0 (2025-11-20)'), 'Expected changelog to contain version 0.1.0');
+            assert.ok(changelogContent.includes('### Feat'), 'Expected changelog to contain a header for features');
+            assert.ok(changelogContent.includes('### Fix'), 'Expected changelog to contain a header for fixes');
