@@ -27,6 +27,7 @@
               python3
               nodejs
               commitizen
+              gh
             ];
 
             shellHook = ''

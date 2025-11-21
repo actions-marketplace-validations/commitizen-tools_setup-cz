@@ -79,3 +79,22 @@ jobs:
             assert.ok(changelogContent.includes('v0.1.0 (2025-11-20)'), 'Expected changelog to contain version 0.1.0');
             assert.ok(changelogContent.includes('### Feat'), 'Expected changelog to contain a header for features');
             assert.ok(changelogContent.includes('### Fix'), 'Expected changelog to contain a header for fixes');
+  test-trigger-other-job:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: ./
+      - id: get-version
+        run: |
+          current_version="$(cz version -p)" # ATTENTION: You may have to add the v* at the beginning of the version
+          echo "current_version=$current_version" >> $GITHUB_OUTPUT
+      - name: trigger other workflow
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow list
+          gh workflow run .github/workflows/trigger-me.yaml \
+            --ref "${{ github.head_ref }}" \
+            -f "version=${{ steps.get-version.outputs.current_version }}"

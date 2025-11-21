@@ -1,0 +1,16 @@
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to trigger"
+        required: true
+
+jobs:
+  triggered-echo:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: Trigger other job
+        run: |
+          echo "Version: ${{ inputs.version }}"
