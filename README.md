@@ -1,6 +1,10 @@
 # setup-cz
 
-> Github action to only configure cz CLI
+This workflow sets up the commitizen CLI for use in your GitHub workflows.
+Unlike `commitizen-action`, this workflow only installs the CLI.
+It does not automatically bump, commit or push changes.
+This workflow, instead, gives more flexibility to the user by letting them
+use the full range of commitizen commands.
 
 ## Usage
 
