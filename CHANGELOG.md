@@ -1,3 +1,14 @@
+## v0.5.0 (2025-11-25)
+
+### BREAKING CHANGE
+
+- `cache` input is removed, as it's not adding any benefit
+and increases complexity. `pip` deps are not being cached
+
+### Fix
+
+- remove unnecessary cache input
+
 ## v0.4.1 (2025-11-21)
 
 ### Fix

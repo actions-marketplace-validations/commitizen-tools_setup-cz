@@ -37,7 +37,6 @@ jobs:
 |-----|-----------|-------|:------:|
 |`version`|Version of commitizen to install|`latest`|no|
 |`extra_requirements`|Install extra dependencies|n/a|no|
-|`cache`|Cache python setup, set to "true" to enable|`false`|no|
 ## Outputs
 None
 <!--doc_end-->
