@@ -9,10 +9,8 @@ inputs:
   extra_requirements:
     description: "Install extra dependencies"
     required: false
-  cache:
-    description: 'Cache python setup, set to "true" to enable'
-    required: false
-    default: "false"
+  python-version:
+    description: "Version range or exact version of Python or PyPy to use, using SemVer's version range syntax. Reads from .python-version if unset. Passed directly to setup-python"
 
 branding:
   icon: "anchor"
@@ -22,38 +20,25 @@ runs:
   using: "composite"
   steps:
     - id: set-vars
-      shell: python
+      uses: actions/github-script@v8
       env:
         COMMITIZEN_VERSION: ${{ inputs.version }}
         CACHE: ${{ inputs.cache }}
-      run: |
-        import os
+      with:
+        script: |
+          // Set commitizen version
+          const commitizenVersion = process.env.COMMITIZEN_VERSION || '';
+          const setCommitizenVersion = commitizenVersion === 'latest' ? '' : `==${commitizenVersion}`;
 
-        # Set commitizen version
-        commitizen_version = os.environ.get("COMMITIZEN_VERSION", "").strip()
-        if commitizen_version == "latest":
-            set_commitizen_version = ""
-        else:
-            set_commitizen_version = f"=={commitizen_version}"
-
-        # Set python cache
-        cache = os.environ.get("CACHE", "")
-        if cache == True or cache == "true":
-            set_cache = "pip"
-        else:
-            set_cache = ""
-
-        # Write outputs
-        with open(os.environ["GITHUB_OUTPUT"], "a") as fh:
-            fh.write(f"COMMITIZEN_VERSION={set_commitizen_version}\n")
-            fh.write(f"PYTHON_CACHE={set_cache}\n")
+          // Write outputs
+          core.setOutput('commitizen-version', setCommitizenVersion);
     - uses: actions/setup-python@v6
       with:
-        cache: ${{ steps.set-vars.outputs.PYTHON_CACHE }}
+        python-version: ${{ inputs.python-version }}
     - name: Install commitizen
       shell: bash
       env:
-        COMMITIZEN_VERSION: ${{ steps.set-vars.outputs.COMMITIZEN_VERSION }}
+        COMMITIZEN_VERSION: ${{ steps.set-vars.outputs.commitizen-version }}
         EXTRA_REQUIREMENTS: ${{ inputs.extra_requirements }}
       run: |
-        pip install -U commitizen${COMMITIZEN_VERSION} ${EXTRA_REQUIREMENTS}
+        python -m pip install -U commitizen${COMMITIZEN_VERSION} ${EXTRA_REQUIREMENTS}

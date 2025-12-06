@@ -21,6 +21,8 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
       - uses: commitizen-tools/setup-cz@main
+        with:
+          python-version: "3.x"
       - name: Set up git config
         run: |
           git config --global user.name "github-actions[bot]"
@@ -37,7 +39,7 @@ jobs:
 |-----|-----------|-------|:------:|
 |`version`|Version of commitizen to install|`latest`|no|
 |`extra_requirements`|Install extra dependencies|n/a|no|
-|`cache`|Cache python setup, set to "true" to enable|`false`|no|
+|`python-version`|Version range or exact version of Python or PyPy to use, using SemVer's version range syntax. Reads from .python-version if unset. Passed directly to setup-python|n/a|no|
 ## Outputs
 None
 <!--doc_end-->

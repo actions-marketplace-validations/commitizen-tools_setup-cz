@@ -1,3 +1,32 @@
+## v0.6.0 (2025-11-27)
+
+### Feat
+
+- **inputs**: Expose python-version param
+
+## v0.5.2 (2025-11-25)
+
+### Fix
+
+- use pip as module
+
+## v0.5.1 (2025-11-25)
+
+### Fix
+
+- use github-script which has more support than python shell
+
+## v0.5.0 (2025-11-25)
+
+### BREAKING CHANGE
+
+- `cache` input is removed, as it's not adding any benefit
+and increases complexity. `pip` deps are not being cached
+
+### Fix
+
+- remove unnecessary cache input
+
 ## v0.4.1 (2025-11-21)
 
 ### Fix
