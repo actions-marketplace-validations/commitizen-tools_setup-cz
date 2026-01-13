@@ -16,17 +16,13 @@ jobs:
       contents: write
       actions: write
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           fetch-tags: true
       - uses: commitizen-tools/setup-cz@main
         with:
           python-version: "3.x"
-      - name: Set up git config
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
       - run: |
           cz version -p
           cz bump --yes --annotated-tag
@@ -40,6 +36,7 @@ jobs:
 |`version`|Version of commitizen to install|`latest`|no|
 |`extra_requirements`|Install extra dependencies|n/a|no|
 |`python-version`|Version range or exact version of Python or PyPy to use, using SemVer's version range syntax. Reads from .python-version if unset. Passed directly to setup-python|n/a|no|
+|`set-git-config`|Set git config|`true`|no|
 ## Outputs
 None
 <!--doc_end-->

@@ -1,3 +1,9 @@
+## v0.7.0 (2026-01-12)
+
+### Feat
+
+- **action**: add default git config
+
 ## v0.6.0 (2025-11-27)
 
 ### Feat
