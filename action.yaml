@@ -30,7 +30,7 @@ runs:
         git config --global user.name "github-actions[bot]"
         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
     - id: set-vars
-      uses: actions/github-script@v8
+      uses: actions/github-script@v9
       env:
         COMMITIZEN_VERSION: ${{ inputs.version }}
         CACHE: ${{ inputs.cache }}
