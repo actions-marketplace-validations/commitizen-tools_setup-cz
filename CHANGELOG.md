@@ -1,3 +1,9 @@
+## v0.9.1 (2026-05-11)
+
+### Fix
+
+- **examples**: place --no-raise before bump subcommand
+
 ## v0.9.0 (2026-04-07)
 
 ### Feat
