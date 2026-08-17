@@ -22,25 +22,45 @@ jobs:
           python-version: "3.x"
       - id: bump-version
         run: |
-          cz bump --yes --annotated-tag
+          old_version="$(cz version -p)"
+          old_sha="$(git rev-parse HEAD)"
+          # Pass `--no-raise 21` so that pushing only non-bump-eligible commits
+          # (e.g. docs:, ci:, build(deps):) does not fail the workflow. Note
+          # that `--no-raise` is a top-level option and must come before the
+          # `bump` subcommand. Exit code 21 is NO_COMMITS_TO_BUMP.
+          cz --no-raise 21 bump --yes --annotated-tag
+
+          if [ "$(git rev-parse HEAD)" = "$old_sha" ]; then
+            echo "No bump-eligible commits found, skipping release."
+            echo "bumped=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          echo "bumped=true" >> $GITHUB_OUTPUT
           git push --follow-tags
-          current_version="$(cz version -p)" # ATTENTION: You may have to add the v* at the beginning of the version
-          echo "current_version=$current_version" >> $GITHUB_OUTPUT
+          new_version="$(cz version -p)"
+          new_version_tag="$(cz version -p --tag)"
+
+          echo "old_version=$old_version" >> $GITHUB_OUTPUT
+          echo "new_version=$new_version" >> $GITHUB_OUTPUT
+          echo "new_version_tag=$new_version_tag" >> $GITHUB_OUTPUT
       - name: Build changelog for Release
+        if: steps.bump-version.outputs.bumped == 'true'
         env:
-          CURRENT_VERSION: ${{ steps.bump-version.outputs.current_version }}
+          NEW_VERSION: ${{ steps.bump-version.outputs.new_version }}
         run: |
-          cz changelog --dry-run "${CURRENT_VERSION}" > .changelog.md
+          cz changelog --dry-run "${NEW_VERSION}" > .changelog.md
       - name: Release
-        uses: softprops/action-gh-release@v2
-        with:
-          body_path: ".changelog.md"
-          tag_name: ${{ steps.bump-version.outputs.current_version }}
+        if: steps.bump-version.outputs.bumped == 'true'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+          NEW_VERSION_TAG: ${{ steps.bump-version.outputs.new_version_tag }}
+        run: |
+          gh release create "${NEW_VERSION_TAG}" --notes-file .changelog.md
       - name: trigger other workflow
+        if: steps.bump-version.outputs.bumped == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh workflow run .github/workflows/trigger-me.yaml \
-            -f "version=${{ steps.bump-version.outputs.current_version }}"
+          gh workflow run release.yaml \
+            -f "version=${{ steps.bump-version.outputs.new_version_tag }}"

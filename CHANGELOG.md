@@ -1,3 +1,36 @@
+## v0.9.1 (2026-05-11)
+
+### Fix
+
+- **examples**: place --no-raise before bump subcommand
+
+## v0.9.0 (2026-04-07)
+
+### Feat
+
+- allow git user and email configuration
+
+## v0.8.0 (2026-04-02)
+
+### Feat
+
+- **input**: rename extra requirements to kebab case
+- Input `extra_requirements` has been renamed to `extra-requirement`
+to follow github actions conventions. The camel case version will be removed in v1
+
+### Fix
+
+- **examples**: Remove unnecesary comment
+
+## v0.7.1 (2026-03-31)
+
+### Fix
+
+- **ci**: use gh in our own release cycle
+- **nix**: bump flake.lock
+- **example**: use gh cli for release instead of external action
+- **examples**: improve trigger-other-job
+
 ## v0.7.0 (2026-01-12)
 
 ### Feat
